@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVECMETA MEETING ROOM</title>
+    <!-- CDN Resources -->
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --primary: #012169;  /* McKinsey Blue */
+            --secondary: #007AB8;
+            --accent: #E3A300;
+            --text: #333333;
+            --light-gray: #F5F5F5;
+            --border: #E0E0E0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            background: white;
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header Styles */
+        .header {
+            background: var(--primary);
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        /* Main Content Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 4px;
+            height: calc(100vh - 100px);
+            position: sticky;
+            top: 20px;
+        }
+
+        /* Contact List */
+        .contact-list {
+            margin-bottom: 2rem;
+        }
+
+        .contact-card {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .contact-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .contact-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Meeting Section */
+        .meeting-section {
+            background: white;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+
+        .meeting-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .meeting-card {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .meeting-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .attendees {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .attendee-tag {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2px;
+            font-size: 0.875rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                height: auto;
+                position: static;
+            }
+        }
+
+        /* Responsive Design */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 4px;
+            width: 90%;
+            max-width: 500px;
+            margin: 50px auto;
+        }
+
+        .message {
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            margin-bottom: 0.5rem;
+            max-width: 80%;
+        }
+
+        .message.sent {
+            background: var(--primary);
+            color: white;
+            margin-left: auto;
+            border-radius: 1rem 0 1rem 1rem;
+        }
+
+        .message.received {
+            background: var(--light-gray);
+            margin-right: auto;
+            border-radius: 0 1rem 1rem 1rem;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-top: 0.25rem;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+        }
+
+        .btn-icon {
+            padding: 0.25rem 0.5rem;
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .btn-icon:hover {
+            color: var(--secondary);
+        }
+
+        /* 搜索栏样式 */
+        .search-bar {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: white;
+        }
+
+        /* 过滤器样式 */
+        .filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--primary);
+            background: none;
+            color: var(--primary);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* 排序样式 */
+        .sort-dropdown {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        /* 拖拽样式 */
+        .dragging {
+            opacity: 0.5;
+            background: var(--light-gray);
+        }
+
+        /* Pitch Progress Styles */
+        .pitch-progress {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--light-gray);
+            border-radius: 4px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ddd;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .pitch-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Meeting Content Editor */
+        .meeting-content-editor {
+            width: 100%;
+            min-height: 200px;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            margin: 1rem 0;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .edit-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-left: 2rem;
+        }
+
+        .username {
+            color: white;
+            font-weight: 600;
+        }
+
+        .btn-logout {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Excel Style Table */
+        .excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            font-size: 14px;
+        }
+
+        .excel-table th {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 8px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            text-align: left;
+        }
+
+        .excel-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .excel-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .excel-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .excel-cell-editable {
+            position: relative;
+        }
+
+        .excel-cell-editable:hover::after {
+            content: '✎';
+            position: absolute;
+            right: 5px;
+            color: var(--primary);
+            opacity: 0.5;
+        }
+
+        .excel-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .excel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: white;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            max-height: calc(100vh - 250px);
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo">AVECMETA</div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-link">Dashboard</a>
+                <a href="#" class="nav-link">Meetings</a>
+                <a href="#" class="nav-link">Contacts</a>
+                <a href="#" class="nav-link">Reports</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-grid">
+            <!-- 左侧边栏：联系人列表 -->
+            <aside class="sidebar">
+                <div class="excel-view">
+                    <div class="excel-header">
+                        <h2>Contacts</h2>
+                        <div class="excel-controls">
+                            <input type="text" 
+                                   class="search-bar" 
+                                   placeholder="Search contacts..." 
+                                   onkeyup="searchContacts(this.value)">
+                            <button class="btn btn-primary" onclick="showAddContactModal()">
+                                <i class="fas fa-plus"></i> Add Contact
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="excel-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                    <th>Email</th>
+                                    <th>Pitch Status</th>
+                                    <th>Progress</th>
+                                    <th>Notes</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contactsList">
+                                <!-- 联系人将在这里动态添加 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- 主要内容区：会议记录 -->
+            <main class="meeting-section">
+                <div class="meeting-header">
+                    <h1>Meeting Notes</h1>
+                    <div class="meeting-filters">
+                        <input type="text" 
+                               class="search-bar" 
+                               placeholder="Search meetings..." 
+                               onkeyup="searchMeetings(this.value)">
+                        <select class="sort-dropdown" onchange="sortMeetings(this.value)">
+                            <option value="date">Sort by Date</option>
+                            <option value="title">Sort by Title</option>
+                            <option value="attendees">Sort by Attendees</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="showAddMeetingModal()">
+                        <i class="fas fa-plus"></i> New Meeting
+                    </button>
+                </div>
+                <div id="meetingsList">
+                    <!-- 会议记录将在这里动态添加 -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // 初始化数据
+        let contacts = [];
+        let meetings = [];
+
+        // 添加本地存储功能
+        function saveToLocalStorage() {
+            localStorage.setItem('contacts', JSON.stringify(contacts));
+            localStorage.setItem('meetings', JSON.stringify(meetings));
+        }
+
+        function loadFromLocalStorage() {
+            const savedContacts = localStorage.getItem('contacts');
+            const savedMeetings = localStorage.getItem('meetings');
+            
+            if (savedContacts) {
+                contacts = JSON.parse(savedContacts);
+                contacts.forEach(contact => addContactToDOM(contact));
+            }
+            
+            if (savedMeetings) {
+                meetings = JSON.parse(savedMeetings);
+                meetings.forEach(meeting => addMeetingToDOM(meeting));
+            }
+        }
+
+        function addContact(data) {
+            const contact = {
+                id: Date.now(),
+                progress: 0,
+                pitchStatus: 'Not Started',
+                pitchNotes: '',
+                ...data
+            };
+            contacts.push(contact);
+            addContactToDOM(contact);
+            saveToLocalStorage();
+        }
+
+        function addContactToDOM(contact) {
+            const row = document.createElement('tr');
+            row.className = 'animate__animated animate__fadeIn';
+            row.dataset.id = contact.id;
+            row.innerHTML = `
+                <td class="excel-cell-editable" onclick="editCell(this, ${contact.id}, 'name')">${contact.name}</td>
+                <td class="excel-cell-editable" onclick="editCell(this, ${contact.id}, 'role')">${contact.role}</td>
+                <td class="excel-cell-editable" onclick="editCell(this, ${contact.id}, 'email')">${contact.email}</td>
+                <td>
+                    <select onchange="updatePitchStatus(${contact.id}, this.value)">
+                        <option value="Not Started" ${contact.pitchStatus === 'Not Started' ? 'selected' : ''}>Not Started</option>
+                        <option value="In Progress" ${contact.pitchStatus === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                        <option value="Review" ${contact.pitchStatus === 'Review' ? 'selected' : ''}>Review</option>
+                        <option value="Completed" ${contact.pitchStatus === 'Completed' ? 'selected' : ''}>Completed</option>
+                    </select>
+                </td>
+                <td>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${contact.progress}%"></div>
+                    </div>
+                    ${contact.progress}%
+                </td>
+                <td class="excel-cell-editable" onclick="editCell(this, ${contact.id}, 'notes')">${contact.pitchNotes || ''}</td>
+                <td class="excel-actions">
+                    <button class="btn btn-icon" onclick="editContact(${contact.id})">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-icon" onclick="deleteContact(${contact.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+
+            document.getElementById('contactsList').appendChild(row);
+        }
+
+        function addMeeting(data) {
+            const meeting = {
+                id: Date.now(),
+                content: data.content || '',
+                ...data
+            };
+            meetings.push(meeting);
+            addMeetingToDOM(meeting);
+            saveToLocalStorage();
+        }
+
+        function addMeetingToDOM(meeting) {
+            const card = document.createElement('div');
+            card.className = 'meeting-card animate__animated animate__fadeIn';
+            card.dataset.id = meeting.id;
+            card.innerHTML = `
+                <div class="meeting-header">
+                    <h3 class="meeting-title">${meeting.title}</h3>
+                    <div class="meeting-actions">
+                        <button class="btn btn-icon" onclick="editMeeting(${meeting.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-icon" onclick="deleteMeeting(${meeting.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <p class="meeting-time"><i class="far fa-clock"></i> ${new Date(meeting.time).toLocaleString()}</p>
+                <div class="attendees">
+                    ${meeting.attendees.map(attendee => `
+                        <span class="attendee-tag">${attendee}</span>
+                    `).join('')}
+                </div>
+                <div class="meeting-content-wrapper">
+                    <textarea 
+                        class="meeting-content-editor" 
+                        onchange="updateMeetingContent(${meeting.id}, this.value)"
+                    >${meeting.content}</textarea>
+                    <div class="edit-controls">
+                        <button class="btn btn-primary" onclick="saveMeetingContent(${meeting.id})">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                        <button class="btn btn-primary" onclick="previewMeetingContent(${meeting.id})">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('meetingsList').appendChild(card);
+        }
+
+        function deleteContact(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const card = document.querySelector(`[data-id="${id}"]`);
+                    card.remove();
+                    contacts = contacts.filter(contact => contact.id !== id);
+                    saveToLocalStorage();
+                    Swal.fire('Deleted!', 'Contact has been deleted.', 'success');
+                }
+            });
+        }
+
+        function deleteMeeting(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const card = document.querySelector(`[data-id="${id}"]`);
+                    card.remove();
+                    meetings = meetings.filter(meeting => meeting.id !== id);
+                    saveToLocalStorage();
+                    Swal.fire('Deleted!', 'Meeting has been deleted.', 'success');
+                }
+            });
+        }
+
+        // 联系人相关功能
+        function showAddContactModal() {
+            Swal.fire({
+                title: 'Add New Contact',
+                html: `
+                    <input id="name" class="swal2-input" placeholder="Name">
+                    <input id="role" class="swal2-input" placeholder="Role">
+                    <input id="email" class="swal2-input" placeholder="Email">
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Add',
+                preConfirm: () => {
+                    return {
+                        name: document.getElementById('name').value,
+                        role: document.getElementById('role').value,
+                        email: document.getElementById('email').value
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    addContact(result.value);
+                }
+            });
+        }
+
+        // 会议相关功能
+        function showAddMeetingModal() {
+            Swal.fire({
+                title: 'Add New Meeting',
+                html: `
+                    <input id="title" class="swal2-input" placeholder="Meeting Title">
+                    <input id="time" class="swal2-input" type="datetime-local">
+                    <input id="attendees" class="swal2-input" placeholder="Attendees (comma separated)">
+                    <textarea id="content" class="swal2-textarea" placeholder="Meeting Notes"></textarea>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Add',
+                preConfirm: () => {
+                    return {
+                        title: document.getElementById('title').value,
+                        time: document.getElementById('time').value,
+                        attendees: document.getElementById('attendees').value.split(',').map(s => s.trim()),
+                        content: document.getElementById('content').value
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    addMeeting(result.value);
+                }
+            });
+        }
+
+        // 添加一些示例数据
+        window.onload = function() {
+            addContact({
+                name: 'John Doe',
+                role: 'Project Manager',
+                email: 'john@example.com'
+            });
+
+            addMeeting({
+                title: 'Weekly Status Update',
+                time: '2024-03-20T14:00',
+                attendees: ['John Doe', 'Jane Smith', 'Mike Johnson'],
+                content: 'Discussion about project progress and next steps.'
+            });
+        }
+
+        // 编辑联系人
+        function editContact(id) {
+            const contact = contacts.find(c => c.id === id);
+            Swal.fire({
+                title: 'Edit Contact',
+                html: `
+                    <input id="name" class="swal2-input" value="${contact.name}" placeholder="Name">
+                    <input id="role" class="swal2-input" value="${contact.role}" placeholder="Role">
+                    <input id="email" class="swal2-input" value="${contact.email}" placeholder="Email">
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Save',
+                preConfirm: () => {
+                    return {
+                        id: contact.id,
+                        name: document.getElementById('name').value,
+                        role: document.getElementById('role').value,
+                        email: document.getElementById('email').value
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    updateContact(result.value);
+                }
+            });
+        }
+
+        // 更新联系人
+        function updateContact(data) {
+            const index = contacts.findIndex(c => c.id === data.id);
+            contacts[index] = data;
+            const card = document.querySelector(`[data-id="${data.id}"]`);
+            card.querySelector('.contact-name').textContent = data.name;
+            card.querySelector('.contact-info').innerHTML = `
+                <p><i class="fas fa-briefcase"></i> ${data.role}</p>
+                <p><i class="fas fa-envelope"></i> ${data.email}</p>
+            `;
+        }
+
+        // 搜索功能
+        function searchContacts(query) {
+            const cards = document.querySelectorAll('.contact-card');
+            query = query.toLowerCase();
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(query) ? 'block' : 'none';
+            });
+        }
+
+        function searchMeetings(query) {
+            const cards = document.querySelectorAll('.meeting-card');
+            query = query.toLowerCase();
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(query) ? 'block' : 'none';
+            });
+        }
+
+        // 过滤功能
+        function filterContacts(status) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            const cards = document.querySelectorAll('.contact-card');
+            cards.forEach(card => {
+                if (status === 'all' || card.dataset.status === status) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // 排序功能
+        function sortContacts(criteria) {
+            const list = document.getElementById('contactsList');
+            const cards = Array.from(list.children);
+            
+            cards.sort((a, b) => {
+                const aValue = a.querySelector(criteria === 'name' ? '.contact-name' : '.contact-role').textContent;
+                const bValue = b.querySelector(criteria === 'name' ? '.contact-name' : '.contact-role').textContent;
+                return aValue.localeCompare(bValue);
+            });
+            
+            cards.forEach(card => list.appendChild(card));
+        }
+
+        function sortMeetings(criteria) {
+            const list = document.getElementById('meetingsList');
+            const cards = Array.from(list.children);
+            
+            cards.sort((a, b) => {
+                if (criteria === 'date') {
+                    return new Date(b.dataset.time) - new Date(a.dataset.time);
+                }
+                const aValue = a.querySelector(criteria === 'title' ? '.meeting-title' : '.attendees').textContent;
+                const bValue = b.querySelector(criteria === 'title' ? '.meeting-title' : '.attendees').textContent;
+                return aValue.localeCompare(bValue);
+            });
+            
+            cards.forEach(card => list.appendChild(card));
+        }
+
+        // 初始化拖拽排序
+        document.addEventListener('DOMContentLoaded', () => {
+            const lists = document.querySelectorAll('.contact-list, #meetingsList');
+            
+            lists.forEach(list => {
+                list.addEventListener('dragstart', e => {
+                    e.target.classList.add('dragging');
+                });
+
+                list.addEventListener('dragend', e => {
+                    e.target.classList.remove('dragging');
+                });
+
+                list.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    const afterElement = getDragAfterElement(list, e.clientY);
+                    const draggable = document.querySelector('.dragging');
+                    if (afterElement == null) {
+                        list.appendChild(draggable);
+                    } else {
+                        list.insertBefore(draggable, afterElement);
+                    }
+                });
+            });
+        });
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.contact-card:not(.dragging), .meeting-card:not(.dragging)')];
+            
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        // Pitch Progress Functions
+        function updatePitchStatus(id, status) {
+            const contact = contacts.find(c => c.id === id);
+            contact.pitchStatus = status;
+            contact.progress = getProgressFromStatus(status);
+            
+            const card = document.querySelector(`[data-id="${id}"]`);
+            const progressFill = card.querySelector('.progress-fill');
+            const progressText = card.querySelector('.pitch-status span:last-child');
+            
+            progressFill.style.width = `${contact.progress}%`;
+            progressText.textContent = `${contact.progress}%`;
+        }
+
+        function getProgressFromStatus(status) {
+            const progressMap = {
+                'Not Started': 0,
+                'In Progress': 33,
+                'Review': 66,
+                'Completed': 100
+            };
+            return progressMap[status] || 0;
+        }
+
+        function updatePitchNotes(id, notes) {
+            const contact = contacts.find(c => c.id === id);
+            contact.pitchNotes = notes;
+        }
+
+        // Meeting Content Functions
+        function updateMeetingContent(id, content) {
+            const meeting = meetings.find(m => m.id === id);
+            meeting.content = content;
+        }
+
+        function saveMeetingContent(id) {
+            const meeting = meetings.find(m => m.id === id);
+            Swal.fire('Saved!', 'Meeting content has been saved.', 'success');
+        }
+
+        function previewMeetingContent(id) {
+            const meeting = meetings.find(m => m.id === id);
+            Swal.fire({
+                title: 'Meeting Content Preview',
+                html: marked.parse(meeting.content),
+                width: '80%'
+            });
+        }
+
+        // 初始化页面时加载保存的数据
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFromLocalStorage();
+        });
+
+        // 添加单元格编辑功能
+        function editCell(cell, id, field) {
+            const currentValue = cell.textContent;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentValue;
+            input.style.width = '100%';
+            input.style.padding = '4px';
+            input.style.border = 'none';
+            input.style.background = 'transparent';
+            
+            cell.textContent = '';
+            cell.appendChild(input);
+            input.focus();
+
+            input.addEventListener('blur', () => {
+                const newValue = input.value.trim();
+                cell.textContent = newValue;
+                updateContactField(id, field, newValue);
+            });
+
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    input.blur();
+                }
+            });
+        }
+
+        function updateContactField(id, field, value) {
+            const contact = contacts.find(c => c.id === id);
+            if (contact) {
+                contact[field] = value;
+                saveToLocalStorage();
+            }
+        }
+    </script>
+</body>
+</html> 
